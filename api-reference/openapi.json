@@ -1,16 +1,71 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
+    "title": "SmartBrains API Reference",
+    "description": "This is the official documentation of the SmartBrainsAfica e-learning API.  You can find out more about the api on [Github](https://github.com/Smart-Brains-Kenya/elearning-api) or email the [developer.](https://alex1kariuki.github.io/).  For this api, you can use the api key provided to you and insert the `special-key` to test the authorization filters.",
+    "termsOfService": "https://www.smartbrainskenya.com/",
+    "contact": {
+      "email": "alexngugi47@gmail.com"
     },
-    "version": "1.0.0"
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.1"
   },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Endpoints for tutor, student and admin registrations"
+    },
+    {
+      "name": "courses",
+      "description": "Endpoints for course operations"
+    },
+    {
+      "name": "topics",
+      "description": "Endpoints for topics operations"
+    },
+    {
+      "name": "subtopics",
+      "description": "Endpoints for subtopics operations"
+    },
+    {
+      "name": "quizes",
+      "description": "Endpoints for quizes operations"
+    },
+    {
+      "name": "snippets",
+      "description": "Endpoints saving users code"
+    },
+    {
+      "name": "schools",
+      "description": "Endpoints for schools operations"
+    },
+    {
+      "name": "classes",
+      "description": "Endpoints for class operations"
+    },
+    {
+      "name": "students",
+      "description": "Endpoints for student operations"
+    },
+    {
+      "name": "payments",
+      "description": "Endpoints for payment operations"
+    },
+    {
+      "name": "reports",
+      "description": "(Documenting soon)"
+    },
+    {
+      "name": "results",
+      "description": "(Documenting soon)"
+    }
+  ],
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "api.smartbrainskenya.com"
     }
   ],
   "security": [
@@ -19,29 +74,657 @@
     }
   ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
+    "/auth/kids/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Register a kid within a school and independent online school",
+        "requestBody": {
+          "description": "Use this to register a student",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Student"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Student created succesfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/kids/signin": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Login the student",
+        "operationId": "loginUser",
         "parameters": [
           {
-            "name": "limit",
+            "name": "username",
             "in": "query",
-            "description": "The maximum number of results to return",
+            "description": "The user name for login",
+            "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
+            }
+          },
+          {
+            "name": "passcode",
+            "in": "query",
+            "description": "The password for login in clear text",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "successful login",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "calls per hour allowed by the user",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Expires-After": {
+                "description": "date in UTC when token expires",
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "authentication failed, incorrect username or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/kids/logout": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Logout the student",
+        "operationId": "logoutStudent",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "query",
+            "description": "The student if to ensure the student is identified",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "passcode",
+            "in": "query",
+            "description": "The password for login in clear text",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful login",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "calls per hour allowed by the user",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Expires-After": {
+                "description": "date in UTC when token expires",
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "authentication failed, incorrect username or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/kids/reset-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Reset Password for student, you will have to have admin or tutor credentials",
+        "operationId": "resetPassword",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "The username for the student",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "newPassword",
+            "in": "query",
+            "description": "The new password for login in clear text",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful reset the password",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "calls per hour allowed by the user",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Expires-After": {
+                "description": "date in UTC when token expires",
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "student not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error in encrypting password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Register a user who can be changed back to admin",
+        "requestBody": {
+          "description": "Use this to register a user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User created succesfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/admin/signin": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Login the admin",
+        "operationId": "loginAdmin",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "The email for login",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "The password for login for admin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful login",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "calls per hour allowed by the user",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Expires-After": {
+                "description": "date in UTC when token expires",
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "authentication failed, incorrect username or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/tutor/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Register a tutor on the platform",
+        "requestBody": {
+          "description": "Use this to register a tutor",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tutor"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Tutor created succesfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/tutor/signin": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Login the tutor",
+        "operationId": "loginTutor",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "The email for login",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "The password for login for admin",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful login",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "calls per hour allowed by the user",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Expires-After": {
+                "description": "date in UTC when token expires",
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "authentication failed, incorrect username or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/tutor/reset": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Reset Password for tutor, you will have to have admin or tutor rights credentials",
+        "operationId": "resetPasswordTutor",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "The email for the tutor",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful reset the password",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "calls per hour allowed by the user",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Expires-After": {
+                "description": "date in UTC when token expires",
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "student not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error in encrypting password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/course": {
+      "get": {
+        "tags": [
+          "courses"
+        ],
+        "description": "Returns all courses from the platform",
+        "responses": {
+          "200": {
+            "description": "Course response",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Plant"
+                    "$ref": "#/components/schemas/Course"
                   }
                 }
               }
@@ -60,25 +743,28 @@
         }
       },
       "post": {
-        "description": "Creates a new plant in the store",
+        "tags": [
+          "courses"
+        ],
+        "description": "Creates a new course on the platform",
         "requestBody": {
           "description": "Plant to add to the store",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/Course"
               }
             }
           },
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "plant response",
+          "201": {
+            "description": "course added succesfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/Course"
                 }
               }
             }
@@ -96,14 +782,19 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/course/{id}": {
+      "get": {
+        "tags": [
+          "courses"
+        ],
+        "summary": "Find course for the id",
+        "description": "Returns all courses from the platform",
+        "operationId": "getCourseById",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "ID of plant to delete",
+            "description": "ID of course to return",
             "required": true,
             "schema": {
               "type": "integer",
@@ -112,9 +803,169 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
             "content": {}
+          },
+          "404": {
+            "description": "Course not found",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "courses"
+        ],
+        "summary": "Patch course for the id",
+        "description": "Edit the course for the platform",
+        "operationId": "patchCourseById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of course to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Course not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "courses"
+        ],
+        "summary": "Delete the course by the id",
+        "description": "Delete the course for the platform",
+        "operationId": "deleteCourseById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of course to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Course not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/topic": {
+      "get": {
+        "tags": [
+          "topics"
+        ],
+        "description": "Returns all topics from the platform",
+        "responses": {
+          "200": {
+            "description": "Topic response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Topic"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "topics"
+        ],
+        "description": "Creates a new topic on the platform",
+        "requestBody": {
+          "description": "Post a new topic",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Topic"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "topic added succesfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Topic"
+                }
+              }
+            }
           },
           "400": {
             "description": "unexpected error",
@@ -128,45 +979,2681 @@
           }
         }
       }
+    },
+    "/topic/{id}": {
+      "get": {
+        "tags": [
+          "topics"
+        ],
+        "summary": "Find topics for the id",
+        "description": "Returns all topics by the ID",
+        "operationId": "getTopicById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of topic to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Topic"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Topic"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Topic not found",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "topics"
+        ],
+        "summary": "Patch topic for the id",
+        "description": "Edit the topic for the platform",
+        "operationId": "patchTopicById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of topic to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Topic"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Topic"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Topic not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "topics"
+        ],
+        "summary": "Delete the topic by the id",
+        "description": "Delete the topic for the platform",
+        "operationId": "deleteTopicById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of topic to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Topic not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/subtopic": {
+      "get": {
+        "tags": [
+          "subtopics"
+        ],
+        "description": "Returns all subtopics from the platform",
+        "responses": {
+          "200": {
+            "description": "Sub Topic response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Subtopic"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "subtopics"
+        ],
+        "description": "Creates a new subtopic on the platform",
+        "requestBody": {
+          "description": "Post a new subtopic",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subtopic"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "sub topic added succesfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subtopic"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subtopic/{id}": {
+      "get": {
+        "tags": [
+          "subtopics"
+        ],
+        "summary": "Find sub topics for the id",
+        "description": "Returns all sub topics by the ID",
+        "operationId": "getSubTopicById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of subtopic to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subtopic"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subtopic"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Sub Topic not found",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "subtopics"
+        ],
+        "summary": "Patch sub topic for the id",
+        "description": "Edit the topic for the platform",
+        "operationId": "patchSubTopicById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of subtopic to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subtopic"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subtopic"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "SubTopic not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "subtopics"
+        ],
+        "summary": "Delete the subtopic by the id",
+        "description": "Delete the subtopic for the platform",
+        "operationId": "deleteSubTopicById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of subtopic to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Sub Topic not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/subtopic/topic/{id}": {
+      "get": {
+        "tags": [
+          "subtopics"
+        ],
+        "summary": "Find sub topics based on a topic ID",
+        "description": "Returns all sub topics by the ID of the topic",
+        "operationId": "getSubTopicByTopicId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of subtopic to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subtopic"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subtopic"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Sub Topic not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/quiz/student/questions/{topicId}": {
+      "get": {
+        "tags": [
+          "quizes"
+        ],
+        "description": "Returns all quiz objects related to the topic",
+        "parameters": [
+          {
+            "name": "topicId",
+            "in": "path",
+            "description": "ID of quiz to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quiz response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Quiz"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quiz/student/submit-answers": {
+      "post": {
+        "tags": [
+          "quizes"
+        ],
+        "description": "Creates a new quiz on the platform",
+        "requestBody": {
+          "description": "Post a new quiz",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Quiz"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Quiz added succesfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quiz"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quiz/student/update-score": {
+      "post": {
+        "tags": [
+          "quizes"
+        ],
+        "description": "Update/ Add a new quiz score for the student",
+        "requestBody": {
+          "description": "Update a user score",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Student"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Scores updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quiz/admin/questions/{id}": {
+      "get": {
+        "tags": [
+          "quizes"
+        ],
+        "summary": "Find questions for the id",
+        "description": "Returns all questions by the topic ID",
+        "operationId": "getQuestionsByTopicId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of quiz to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quiz"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quiz"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Quiz Topic not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/quiz/admin/getSingleQuestion/{id}": {
+      "get": {
+        "tags": [
+          "quizes"
+        ],
+        "summary": "Find question given an ID",
+        "description": "Returns question dependent on the ID",
+        "operationId": "getQuestionById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of quiz question to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quiz"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quiz"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Quiz Question not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/quiz/admin/addQuestion": {
+      "post": {
+        "tags": [
+          "quizes"
+        ],
+        "description": "Add a new question",
+        "requestBody": {
+          "description": "Added a new question to the platform",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Quiz"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Quiz updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quiz"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quiz/admin/editQuestion/{id}": {
+      "patch": {
+        "tags": [
+          "quizes"
+        ],
+        "summary": "Patch a question",
+        "description": "Edit a question",
+        "operationId": "patchQuestionById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of question to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quiz"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quiz"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Quiz not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/quiz/admin/deleteQuiz/{id}": {
+      "delete": {
+        "tags": [
+          "quizes"
+        ],
+        "summary": "Delete the quiz by the id",
+        "description": "Delete the quiz for the platform",
+        "operationId": "deleteQuizById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of quiz to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Quiz not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/quiz/admin/deleteQuestion/{id}": {
+      "delete": {
+        "tags": [
+          "quizes"
+        ],
+        "summary": "Delete the question by the id",
+        "description": "Delete the question for the platform",
+        "operationId": "deleteQuizQuestionById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of question to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Question not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/snippets/{topicId}": {
+      "get": {
+        "tags": [
+          "snippets"
+        ],
+        "summary": "Find snippet given a topicId",
+        "description": "Returns snippet dependent on the topicId",
+        "operationId": "getSnippetByTopicId",
+        "parameters": [
+          {
+            "name": "topicId",
+            "in": "path",
+            "description": "ID of the topic that will hold that code block",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Snippet"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Snippet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Snippet not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/snippets": {
+      "patch": {
+        "tags": [
+          "snippets"
+        ],
+        "summary": "Patch/ update a snippet of code",
+        "description": "Edit a snippet of code",
+        "operationId": "patchSnippet",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Snippet"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Snippet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Snippet not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/schools": {
+      "get": {
+        "tags": [
+          "schools"
+        ],
+        "summary": "Get all schools that are on the platform",
+        "description": "Returns schools on the platform",
+        "operationId": "getAllSchools",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/School"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/School"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "No records found",
+            "content": {}
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "schools"
+        ],
+        "summary": "Post a school on the platform",
+        "requestBody": {
+          "description": "add a new school to the platform",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/School"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/School"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/School"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "No records found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/schools/{schoolId}": {
+      "get": {
+        "tags": [
+          "schools"
+        ],
+        "summary": "Get a single school on the platform",
+        "description": "Returns school on the platform",
+        "operationId": "getSchoolById",
+        "parameters": [
+          {
+            "name": "schoolId",
+            "in": "path",
+            "description": "ID of the school on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/School"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/School"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "School not found",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "schools"
+        ],
+        "summary": "Patch/ update a snippet of code",
+        "description": "Edit a snippet of code",
+        "parameters": [
+          {
+            "name": "schoolId",
+            "in": "path",
+            "description": "ID of the school on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "patchSnippet",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Snippet"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Snippet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Snippet not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "schools"
+        ],
+        "summary": "Delete the school by the id",
+        "description": "Delete the school for the platform",
+        "operationId": "deleteSchoolById",
+        "parameters": [
+          {
+            "name": "schoolId",
+            "in": "path",
+            "description": "ID of school to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "School not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/classes": {
+      "post": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Post a class in a given school",
+        "requestBody": {
+          "description": "Add a new class to the platform",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Class"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/classes/school/{schoolId}": {
+      "get": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Get a classes based on a school on the platform",
+        "description": "Returns class based on a school on the platform",
+        "operationId": "getClassesBySchoolId",
+        "parameters": [
+          {
+            "name": "schoolId",
+            "in": "path",
+            "description": "ID of the school on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Class not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/classes/students/{classId}": {
+      "get": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Get a classes based on a school on the platform",
+        "description": "Returns class based on a school on the platform",
+        "parameters": [
+          {
+            "name": "classId",
+            "in": "path",
+            "description": "ID of the class on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Class not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/classes/{classId}": {
+      "get": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Get a single class by its ID",
+        "description": "Returns a class given an ID",
+        "parameters": [
+          {
+            "name": "classId",
+            "in": "path",
+            "description": "ID of the class on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "getSingleClass",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "No records found",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Patch/ update a class on the platform",
+        "description": "Edit a class",
+        "parameters": [
+          {
+            "name": "classId",
+            "in": "path",
+            "description": "ID of the class on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "patchClass",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Class not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Delete the class by the id",
+        "description": "Delete the class for the platform",
+        "operationId": "deleteClassById",
+        "parameters": [
+          {
+            "name": "classId",
+            "in": "path",
+            "description": "ID of the class on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Class not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/classes/generateCode": {
+      "post": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Create a class code for students to sign in to a class",
+        "requestBody": {
+          "description": "Start a class from the tutor platform",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassCode"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassCode"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassCode"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/classes/joinClass": {
+      "post": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "With a class code generated join a class to mark attendance",
+        "requestBody": {
+          "description": "Join a class from the student platform",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassCode"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassCode"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassCode"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/students": {
+      "post": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Register a student on the platform",
+        "requestBody": {
+          "description": "Register a student on the platform",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Student"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Get all students on the platform",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/students/rewards/{studentId}": {
+      "post": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Submit reward points for the student",
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "path",
+            "description": "ID of the student on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Submit reward points for the student",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Student"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/students/school/{schoolId}": {
+      "get": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Get all students per school",
+        "parameters": [
+          {
+            "name": "schoolId",
+            "in": "path",
+            "description": "ID of the school in the student data on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/students/class/{classId}": {
+      "get": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Get all students in a particular class",
+        "parameters": [
+          {
+            "name": "classId",
+            "in": "path",
+            "description": "ID of the class that you want the data",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/students/{studentId}": {
+      "get": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Get a particular student on the platform",
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "path",
+            "description": "ID of the student that you want the data for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Edit a particular students data",
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "path",
+            "description": "ID of the student on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Submit changes for the student data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Student"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "students"
+        ],
+        "summary": "Delete a particular student on the platform",
+        "description": "Delete the student from the platform",
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "path",
+            "description": "ID of the student on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Student not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/payment/{courseId}/pay": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "description": "Initialize a paystack Payment",
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "ID of the course one is paying for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Payment initialization on paystack",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Payment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Payment initiated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "description": "Make Payment",
+        "requestBody": {
+          "description": "Payment to be saved",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Payment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Payment saved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment/verify/{reference}": {
+      "get": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Verify that a payment was successful",
+        "description": "Returns payment status",
+        "operationId": "verifyTransaction",
+        "parameters": [
+          {
+            "name": "reference",
+            "in": "path",
+            "description": "ID of the transaction from paystack",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID reference supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Payment not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/payment/{courseId}": {
+      "get": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Verify that a course has been paid for",
+        "description": "Returns a course status on the platform",
+        "operationId": "verifyCoursesPaid",
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "ID of the course paid for to verify",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid course reference supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Course not found",
+            "content": {}
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "Plant": {
+      "User": {
         "required": [
-          "name"
+          "name",
+          "email",
+          "password"
         ],
         "type": "object",
         "properties": {
           "name": {
-            "description": "The name of the plant",
-            "type": "string"
+            "type": "string",
+            "description": "The name of the user.",
+            "example": "John Doe",
+            "minLength": 1,
+            "maxLength": 255
           },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
+          "email": {
+            "type": "string",
+            "description": "The email address of the user.",
+            "example": "john.doe@example.com",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user.",
+            "example": "password123",
+            "minLength": 8
+          },
+          "role": {
+            "type": "string",
+            "description": "The role of the user.",
+            "enum": [
+              "admin",
+              "tutor"
+            ],
+            "default": "tutor"
+          },
+          "lastLogin": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp of the user's last login.",
+            "default": null
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the user was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the user was last updated."
           }
         }
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+      "Tutor": {
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           },
-          {
-            "required": [
-              "id"
-            ],
+          "email": {
+            "type": "string"
+          },
+          "avartar": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "employeeNumber": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "string"
+          },
+          "classesAssigned": {
             "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
+            "description": "The classes that the tutor has been assigned"
+          },
+          "lastLogin": {
+            "type": "string",
+            "format": "date-time",
+            "default": "2024-04-12T00:00:00Z",
+            "description": "To ensure that the tutors are logged on"
+          }
+        }
+      },
+      "Student": {
+        "required": [
+          "name",
+          "username",
+          "passcode",
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the student."
+          },
+          "username": {
+            "type": "string",
+            "description": "The username of the student should be unique"
+          },
+          "passcode": {
+            "type": "string",
+            "description": "The passcode of the student."
+          },
+          "gender": {
+            "type": "string",
+            "description": "The gender of the student."
+          },
+          "email": {
+            "type": "string",
+            "description": "The email address of the student."
+          },
+          "phoneNumber": {
+            "type": "number",
+            "description": "The phone number of the student."
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "description": "The date of birth of the student."
+          },
+          "country": {
+            "type": "string",
+            "description": "The country of the student."
+          },
+          "mitCode": {
+            "type": "string",
+            "description": "The MIT code of the student."
+          },
+          "avatar": {
+            "type": "string",
+            "description": "The avatar of the student."
+          },
+          "schoolAttending": {
+            "type": "string",
+            "description": "The school the student is attending."
+          },
+          "rewardPoints": {
+            "type": "number",
+            "description": "The reward points of the student.",
+            "default": 0
+          },
+          "_school": {
+            "type": "string",
+            "description": "The ID of the school to which the student belongs."
+          },
+          "_classEnrolled": {
+            "type": "string",
+            "description": "The ID of the class in which the student is enrolled."
+          },
+          "_certificates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The IDs of the certificates earned by the student."
+          },
+          "attendedClasses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The IDs of the classes attended by the student."
+          },
+          "quizAttempts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "quizId": {
+                  "type": "string",
+                  "description": "The ID of the quiz attempted by the student."
+                },
+                "attempts": {
+                  "type": "number",
+                  "description": "The number of attempts made by the student.",
+                  "default": 0
+                },
+                "score": {
+                  "type": "number",
+                  "description": "The score achieved by the student.",
+                  "default": 0
+                }
               }
             }
+          },
+          "completedCourses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "courseId": {
+                  "type": "string",
+                  "description": "The ID of the completed course."
+                },
+                "timestamp": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "The timestamp indicating when the course was completed."
+                }
+              }
+            },
+            "description": "List of completed courses by the student."
+          },
+          "lastLogin": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp of the student's last login.",
+            "default": null
+          },
+          "currentSession": {
+            "type": "string",
+            "description": "The current session of the student.",
+            "default": null
+          },
+          "otp": {
+            "type": "string",
+            "description": "The one-time password (OTP) of the student for password reset."
+          },
+          "otpExpiration": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The expiration time of the OTP."
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the student was created.",
+            "default": "2024-04-12T00:00:00Z"
           }
-        ]
+        }
+      },
+      "School": {
+        "required": [
+          "name",
+          "code"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "description": "An abbreviation for a school e.g. Mastercard School (msc)",
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "town": {
+            "type": "string"
+          },
+          "isSchoolAvailable": {
+            "type": "string"
+          },
+          "type": {
+            "description": "The type of the school or organisation signing up",
+            "type": "string",
+            "enum": [
+              "all",
+              "club",
+              "test"
+            ]
+          }
+        }
+      },
+      "Class": {
+        "required": [
+          "_school",
+          "_course",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "_school": {
+            "type": "string"
+          },
+          "tutor": {
+            "type": "string"
+          },
+          "assTutor": {
+            "type": "string"
+          },
+          "_course": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "students": {
+            "type": "string"
+          },
+          "tutors": {
+            "type": "string"
+          },
+          "schedule": {
+            "type": "object",
+            "properties": {
+              "days": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of days (e.g., [\"Mon\", \"Tue\", \"Wed\"])."
+              },
+              "startTime": {
+                "type": "string",
+                "description": "Start time in 24-hour format (e.g., \"10:00\")."
+              },
+              "endTime": {
+                "type": "string",
+                "description": "End time in 24-hour format (e.g., \"12:00\")."
+              },
+              "repeat": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "weekly",
+                      "monthly",
+                      "untilDate"
+                    ],
+                    "default": "weekly"
+                  },
+                  "untilDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Date until the schedule repeats (used if repeat is 'untilDate')."
+                  },
+                  "numberOfRepeats": {
+                    "type": "integer",
+                    "description": "Number of repeats (used if repeat is 'weekly' or 'monthly')."
+                  }
+                }
+              }
+            },
+            "description": "Class schedule details."
+          },
+          "startRecur": {
+            "type": "string",
+            "format": "date",
+            "description": "Start recurring date for the calendar."
+          },
+          "endRecur": {
+            "type": "string",
+            "format": "date",
+            "description": "End recurring date for the calendar."
+          },
+          "daysOfWeek": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of days of the week (0-6) (e.g., [1, 3, 4])."
+          },
+          "calendarStartTime": {
+            "type": "string",
+            "description": "Start time for the calendar in 24-hour format (e.g., \"18:30:00\")."
+          }
+        }
+      },
+      "ClassCode": {
+        "required": [
+          "code",
+          "tutorId",
+          "courseId",
+          "expirationTime"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "tutorId": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": "string"
+          },
+          "expirationTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The expiration time for the class code"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the class code was generated.",
+            "default": "2024-04-12T00:00:00Z"
+          },
+          "students": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "studentId": {
+                  "type": "string",
+                  "description": "The ID of the student who joined using the class code."
+                },
+                "joinedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "The timestamp indicating when the student joined the class."
+                }
+              }
+            },
+            "description": "List of students who joined using the class code."
+          }
+        }
+      },
+      "Course": {
+        "required": [
+          "name",
+          "description",
+          "image",
+          "isFree"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "progress": {
+            "description": "to be depricated soon",
+            "type": "string"
+          },
+          "isReleased": {
+            "type": "boolean"
+          },
+          "isFree": {
+            "type": "boolean"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "duration": {
+            "type": "number"
+          },
+          "certificate": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the quiz was created.",
+            "default": "2024-04-12T00:00:00Z"
+          }
+        }
+      },
+      "Topic": {
+        "required": [
+          "_courseId",
+          "title",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "_courseId": {
+            "description": "This is the for the relationship to the course",
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "progress": {
+            "description": "To be deprecated soon",
+            "type": "number"
+          },
+          "image": {
+            "type": "string"
+          },
+          "referenceTopic": {
+            "description": "This is filled in the case of a quiz topic, just reference another topicId",
+            "type": "string"
+          },
+          "video": {
+            "description": "To be shown on the reference topic",
+            "type": "string"
+          },
+          "guide": {
+            "description": "For the tutor guide, to be deprecated",
+            "type": "string"
+          },
+          "environment": {
+            "description": "The various coding environments that exist on the platform",
+            "type": "string",
+            "enum": [
+              "code",
+              "scratch",
+              "android",
+              "quiz",
+              "codegames",
+              "minecraft",
+              "html",
+              "css",
+              "python",
+              "typing",
+              "mblock",
+              "pictoblocks"
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the quiz was created.",
+            "default": "2024-04-12T00:00:00Z"
+          }
+        }
+      },
+      "Subtopic": {
+        "required": [
+          "topicId",
+          "title",
+          "description",
+          "points",
+          "image"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "topicId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "points": {
+            "type": "number"
+          },
+          "image": {
+            "type": "string"
+          },
+          "count": {
+            "description": "The number in the array for hierachy purposes (To be implemented)",
+            "type": "number"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the quiz was created.",
+            "default": "2024-04-12T00:00:00Z"
+          }
+        }
+      },
+      "Snippet": {
+        "required": [
+          "_id",
+          "_topicId",
+          "_studentId",
+          "snippets"
+        ],
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "The ID of the snippet record.",
+            "example": "609f69a5b86fd3280456820d"
+          },
+          "_topicId": {
+            "type": "string",
+            "description": "The ID of the topic associated with the snippet.",
+            "example": "609f69a5b86fd3280456820e"
+          },
+          "_studentId": {
+            "type": "string",
+            "description": "The ID of the student associated with the snippet.",
+            "example": "609f69a5b86fd3280456820f"
+          },
+          "snippets": {
+            "type": "array",
+            "description": "Array of code snippets.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "language": {
+                  "type": "string",
+                  "description": "The programming language of the code snippet.",
+                  "enum": [
+                    "html",
+                    "css",
+                    "js"
+                  ],
+                  "example": "html"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "The code snippet itself.",
+                  "example": "<html><head><title>Sample HTML</title></head><body><h1>Hello, World!</h1></body></html>"
+                }
+              }
+            },
+            "required": [
+              "language",
+              "code"
+            ]
+          },
+          "updatedOn": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp when the snippet record was updated."
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the snippet record was created."
+          }
+        }
+      },
+      "Quiz": {
+        "required": [
+          "topicId",
+          "title",
+          "answers"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "topicId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "answers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "single"
+                  ],
+                  "description": "The type of answer ('single' for single answer)"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "The content of the answer (text for single)"
+                },
+                "isCorrect": {
+                  "type": "boolean",
+                  "description": "Indicates if it's a correct answer"
+                }
+              }
+            },
+            "description": "The list of answers for the quiz."
+          },
+          "points": {
+            "type": "number",
+            "description": "The points associated with the quiz.",
+            "default": 0
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the quiz was created.",
+            "default": "2024-04-12T00:00:00Z"
+          }
+        }
+      },
+      "Payment": {
+        "required": [
+          "user",
+          "course",
+          "paymentMethod",
+          "amount",
+          "currency",
+          "status",
+          "transactionId"
+        ],
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "description": "The ID of the user making the payment.",
+            "example": "609f69a5b86fd3280456820d"
+          },
+          "course": {
+            "type": "string",
+            "description": "The ID of the course being purchased.",
+            "example": "609f69a5b86fd3280456820e"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "description": "The payment method used for the transaction.",
+            "example": "credit_card"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The amount of the payment.",
+            "example": 50
+          },
+          "currency": {
+            "type": "string",
+            "description": "The currency used for the payment.",
+            "example": "KES"
+          },
+          "purchaseDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the payment was made.",
+            "example": "2024-04-12T10:30:00Z"
+          },
+          "status": {
+            "type": "string",
+            "description": "The status of the payment (e.g., 'success', 'pending', 'failed').",
+            "example": "success"
+          },
+          "transactionId": {
+            "type": "string",
+            "description": "The ID of the transaction associated with the payment.",
+            "example": "trans_123456789"
+          }
+        }
       },
       "Error": {
         "required": [
