@@ -27,7 +27,6 @@
       "url": "api-reference"
     }
   ],
-  
   "navigation": [
     {
       "group": "Get Started",
@@ -55,7 +54,44 @@
       ]
     },
     {
-      "group": "Endpoint Examples",
+      "group": "User Management",
+      "pages": [
+        {
+          "group": "Admin Management",
+          "pages": [
+            "api-reference/endpoint/auth/admin/register.mdx",
+            "api-reference/endpoint/auth/admin/signin.mdx"
+          ]
+        },
+        {
+          "group": "Tutor Management",
+          "pages": [
+            "api-reference/endpoint/auth/tutor/register.mdx",
+            "api-reference/endpoint/auth/tutor/signin.mdx",
+            "api-reference/endpoint/auth/tutor/reset.mdx"
+          ]
+        },
+        {
+          "group": "Student Management",
+          "pages": [
+            "api-reference/endpoint/auth/kids/register",
+            "api-reference/endpoint/auth/kids/signin",
+            "api-reference/endpoint/auth/kids/reset",
+            "api-reference/endpoint/auth/kids/logout"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Course Management",
+      "pages": [
+        "api-reference/endpoint/get",
+        "api-reference/endpoint/create",
+        "api-reference/endpoint/delete"
+      ]
+    },
+    {
+      "group": "School Management",
       "pages": [
         "api-reference/endpoint/get",
         "api-reference/endpoint/create",
