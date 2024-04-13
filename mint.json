@@ -168,7 +168,17 @@
         {
           "group": "Tutors",
           "pages": [
-            "api-reference/endpoint/schools/tutors/blank"
+            "api-reference/endpoint/schools/tutors/get-tutors",
+            "api-reference/endpoint/schools/tutors/class-ass",
+            "api-reference/endpoint/schools/tutors/ass-schools",
+            "api-reference/endpoint/schools/tutors/ass-classes",
+            "api-reference/endpoint/schools/tutors/ass-lessons",
+            "api-reference/endpoint/schools/tutors/ass-students",
+            "api-reference/endpoint/schools/tutors/school-stats",
+            "api-reference/endpoint/schools/tutors/get-classes",
+            "api-reference/endpoint/schools/tutors/single-tutor",
+            "api-reference/endpoint/schools/tutors/edit-tutor",
+            "api-reference/endpoint/schools/tutors/delete"
           ]
         },
         {

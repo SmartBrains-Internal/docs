@@ -47,6 +47,10 @@
       "description": "Endpoints for class operations"
     },
     {
+      "name": "tutors",
+      "description": "Endpoints for tutor operations"
+    },
+    {
       "name": "students",
       "description": "Endpoints for student operations"
     },
@@ -2339,6 +2343,431 @@
               "application/xml": {
                 "schema": {
                   "$ref": "#/components/schemas/ClassCode"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tutors": {
+      "get": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Get all tutors on the platform",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tutors/assign/{tutorId}": {
+      "patch": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Assign a tutor a class on the platform",
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "description": "ID of the tutor on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tutors/assigned/schools": {
+      "get": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Get tutors that have been assigned in schools",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tutors/assigned/classes": {
+      "get": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Get assigned tutors per class",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tutors/assigned/students": {
+      "get": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Get students assigned to a tutor",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tutors/assigned/lessons": {
+      "get": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Get assigned lessons for a tutor",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tutors/assigned/school-stats/{id}": {
+      "get": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Get assigned school stats for a tutor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the school in the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tutors/classes/{tutorId}": {
+      "get": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Get classes taught by the tutor",
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "description": "ID of the tutor on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tutors/{tutorId}": {
+      "get": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Get a single tutor",
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "description": "ID of the tutor on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Edit a single tutor",
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "description": "ID of the tutor on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Delete tutor from the platform",
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "description": "ID of the tutor on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tutor"
                 }
               }
             }
