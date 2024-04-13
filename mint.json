@@ -142,9 +142,70 @@
     {
       "group": "School Management",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        {
+          "group": "Schools",
+          "pages": [
+            "api-reference/endpoint/schools/school/get",
+            "api-reference/endpoint/schools/school/post",
+            "api-reference/endpoint/schools/school/get-single",
+            "api-reference/endpoint/schools/school/patch",
+            "api-reference/endpoint/schools/school/delete"
+          ]
+        },
+        {
+          "group": "Classes",
+          "pages": [
+            "api-reference/endpoint/schools/class/post",
+            "api-reference/endpoint/schools/class/get-classes",
+            "api-reference/endpoint/schools/class/get-students",
+            "api-reference/endpoint/schools/class/get-single-class",
+            "api-reference/endpoint/schools/class/edit-class",
+            "api-reference/endpoint/schools/class/delete",
+            "api-reference/endpoint/schools/class/generate-code",
+            "api-reference/endpoint/schools/class/join-class"
+          ]
+        },
+        {
+          "group": "Tutors",
+          "pages": [
+            "api-reference/endpoint/schools/tutors/blank"
+          ]
+        },
+        {
+          "group": "Students",
+          "pages": [
+            "api-reference/endpoint/schools/student/add-student",
+            "api-reference/endpoint/schools/student/get-students",
+            "api-reference/endpoint/schools/student/earn-rewards",
+            "api-reference/endpoint/schools/student/school-student",
+            "api-reference/endpoint/schools/student/class-students",
+            "api-reference/endpoint/schools/student/patch",
+            "api-reference/endpoint/schools/student/delete"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Services",
+      "pages": [
+        {
+          "group": "Payments",
+          "pages": [
+            "api-reference/endpoint/others/payments/payments"
+          ]
+        },
+        {
+          "group": "Results",
+          "pages": [
+            "api-reference/endpoint/others/results/result"
+          ]
+        },
+        {
+          "group": "Reports",
+          "pages": [
+            "api-reference/endpoint/others/reports/reports"
+          ]
+        }
       ]
     }
   ],
