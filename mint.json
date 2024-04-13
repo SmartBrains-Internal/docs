@@ -57,14 +57,14 @@
       "group": "User Management",
       "pages": [
         {
-          "group": "Admin Management",
+          "group": "Admin",
           "pages": [
             "api-reference/endpoint/auth/admin/register.mdx",
             "api-reference/endpoint/auth/admin/signin.mdx"
           ]
         },
         {
-          "group": "Tutor Management",
+          "group": "Tutor",
           "pages": [
             "api-reference/endpoint/auth/tutor/register.mdx",
             "api-reference/endpoint/auth/tutor/signin.mdx",
@@ -72,7 +72,7 @@
           ]
         },
         {
-          "group": "Student Management",
+          "group": "Student",
           "pages": [
             "api-reference/endpoint/auth/kids/register",
             "api-reference/endpoint/auth/kids/signin",
@@ -85,9 +85,58 @@
     {
       "group": "Course Management",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        {
+          "group": "Courses",
+          "pages": [
+            "api-reference/endpoint/courses/course/get",
+            "api-reference/endpoint/courses/course/post",
+            "api-reference/endpoint/courses/course/single",
+            "api-reference/endpoint/courses/course/patch",
+            "api-reference/endpoint/courses/course/delete"
+          ]
+        },
+        {
+          "group": "Topics",
+          "pages": [
+            "api-reference/endpoint/courses/topic/get",
+            "api-reference/endpoint/courses/topic/post",
+            "api-reference/endpoint/courses/topic/single",
+            "api-reference/endpoint/courses/topic/patch",
+            "api-reference/endpoint/courses/topic/delete"
+          ]
+        },
+        {
+          "group": "Subtopics",
+          "pages": [
+            "api-reference/endpoint/courses/subtopic/get",
+            "api-reference/endpoint/courses/subtopic/post",
+            "api-reference/endpoint/courses/subtopic/single",
+            "api-reference/endpoint/courses/subtopic/patch",
+            "api-reference/endpoint/courses/subtopic/delete",
+            "api-reference/endpoint/courses/subtopic/specific"
+          ]
+        },
+        {
+          "group": "Quizes",
+          "pages": [
+            "api-reference/endpoint/courses/quiz/get-multi-que",
+            "api-reference/endpoint/courses/quiz/submit-ans",
+            "api-reference/endpoint/courses/quiz/update-score",
+            "api-reference/endpoint/courses/quiz/get-que",
+            "api-reference/endpoint/courses/quiz/get-single-que",
+            "api-reference/endpoint/courses/quiz/add-que",
+            "api-reference/endpoint/courses/quiz/edit-que",
+            "api-reference/endpoint/courses/quiz/delete-que",
+            "api-reference/endpoint/courses/quiz/delete-quiz"
+          ]
+        },
+        {
+          "group": "Snippets",
+          "pages": [
+            "api-reference/endpoint/courses/snippets/get",
+            "api-reference/endpoint/courses/snippets/patch"
+          ]
+        }
       ]
     },
     {
