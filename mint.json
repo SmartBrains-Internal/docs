@@ -149,6 +149,7 @@
             "api-reference/endpoint/schools/class/get-single-class",
             "api-reference/endpoint/schools/class/edit-class",
             "api-reference/endpoint/schools/class/delete",
+            "api-reference/endpoint/schools/class/reset-session",
             "api-reference/endpoint/schools/class/generate-code",
             "api-reference/endpoint/schools/class/join-class"
           ]
@@ -186,6 +187,17 @@
     {
       "group": "Services",
       "pages": [
+        {
+          "group": "Calendar",
+          "pages": [
+            "api-reference/endpoint/others/calendar/getAllEvents",
+            "api-reference/endpoint/others/calendar/getEvent",
+            "api-reference/endpoint/others/calendar/getUserEvents",
+            "api-reference/endpoint/others/calendar/add",
+            "api-reference/endpoint/others/calendar/edit",
+            "api-reference/endpoint/others/calendar/delete"
+          ]
+        },
         {
           "group": "Payments",
           "pages": [
