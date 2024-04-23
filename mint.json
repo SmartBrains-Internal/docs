@@ -71,6 +71,13 @@
       ]
     },
     {
+      "group": "Overviews",
+      "pages": [
+        "api-reference/endpoint/overviews/admin",
+        "api-reference/endpoint/overviews/tutor"
+      ]
+    },
+    {
       "group": "Course Management",
       "pages": [
         {
