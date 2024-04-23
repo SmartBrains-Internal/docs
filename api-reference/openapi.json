@@ -19,6 +19,10 @@
       "description": "Endpoints for tutor, student and admin registrations"
     },
     {
+      "name": "roles",
+      "description": "Endpoints for roles that will be assigned to backend users"
+    },
+    {
       "name": "courses",
       "description": "Endpoints for course operations"
     },
@@ -29,6 +33,10 @@
     {
       "name": "subtopics",
       "description": "Endpoints for subtopics operations"
+    },
+    {
+      "name": "steps",
+      "description": "Endpoints for tutor guide steps"
     },
     {
       "name": "quizes",
@@ -55,6 +63,10 @@
       "description": "Endpoints for student operations"
     },
     {
+      "name": "overviews",
+      "description": "This will have admin and tutor overviews"
+    },
+    {
       "name": "calendar",
       "description": "Endpoints for calendar operations"
     },
@@ -63,8 +75,12 @@
       "description": "Endpoints for payment operations"
     },
     {
+      "name": "earnings",
+      "description": "Earnings for tutors on the platform"
+    },
+    {
       "name": "reports",
-      "description": "(Documenting soon)"
+      "description": "This is the one to generate the platform reports"
     },
     {
       "name": "results",
@@ -718,6 +734,201 @@
         }
       }
     },
+    "/roles": {
+      "get": {
+        "tags": [
+          "roles"
+        ],
+        "description": "Returns all roles from the platform",
+        "responses": {
+          "200": {
+            "description": "Roles response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Roles"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "roles"
+        ],
+        "description": "Creates roles on the platform",
+        "requestBody": {
+          "description": "Role to add to the platform",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Roles"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "role added succesfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Roles"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles/{roleId}": {
+      "get": {
+        "tags": [
+          "roles"
+        ],
+        "summary": "Find role for the id",
+        "description": "Returns all roles from the platform",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "description": "ID of role to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Roles"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Roles"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Roles not found",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "roles"
+        ],
+        "summary": "Patch role for the id",
+        "description": "Edit the role for the platform",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "description": "ID of role to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Roles"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Roles"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Role not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "roles"
+        ],
+        "summary": "Delete the role by the id",
+        "description": "Delete the role for the platform",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "description": "ID of role to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Role not found",
+            "content": {}
+          }
+        }
+      }
+    },
     "/course": {
       "get": {
         "tags": [
@@ -904,6 +1115,142 @@
           "200": {
             "description": "successful operation",
             "content": {}
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Course not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/course/lessons/{tutorId}": {
+      "get": {
+        "tags": [
+          "courses"
+        ],
+        "summary": "Find lessons that tutor has",
+        "description": "Returns all lessons based on a tutor",
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "description": "ID of tutor to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "courseId": {
+                        "type": "string",
+                        "description": "ID of the course"
+                      },
+                      "courseName": {
+                        "type": "string",
+                        "description": "Name of the course"
+                      },
+                      "className": {
+                        "type": "string",
+                        "description": "Name of the class"
+                      },
+                      "schoolName": {
+                        "type": "string",
+                        "description": "Name of the school"
+                      },
+                      "schoolLogo": {
+                        "type": "string",
+                        "description": "URL of the school logo"
+                      },
+                      "startTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Start time of the lesson"
+                      },
+                      "endTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "End time of the lesson"
+                      },
+                      "startRecur": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Start recurrence of the lesson"
+                      },
+                      "endRecur": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "End recurrence of the lesson"
+                      }
+                    }
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "courseId": {
+                        "type": "string",
+                        "description": "ID of the course"
+                      },
+                      "courseName": {
+                        "type": "string",
+                        "description": "Name of the course"
+                      },
+                      "className": {
+                        "type": "string",
+                        "description": "Name of the class"
+                      },
+                      "schoolName": {
+                        "type": "string",
+                        "description": "Name of the school"
+                      },
+                      "schoolLogo": {
+                        "type": "string",
+                        "description": "URL of the school logo"
+                      },
+                      "startTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Start time of the lesson"
+                      },
+                      "endTime": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "End time of the lesson"
+                      },
+                      "startRecur": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Start recurrence of the lesson"
+                      },
+                      "endRecur": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "End recurrence of the lesson"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid ID supplied",
@@ -1354,6 +1701,247 @@
           },
           "404": {
             "description": "Sub Topic not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/steps": {
+      "get": {
+        "tags": [
+          "steps"
+        ],
+        "description": "Returns all tutor steps from the platform",
+        "responses": {
+          "200": {
+            "description": "Steps response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Steps"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "steps"
+        ],
+        "description": "Creates a new step on the platform",
+        "requestBody": {
+          "description": "Post a new step",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Steps"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "steps added succesfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Steps"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/steps/{stepId}": {
+      "get": {
+        "tags": [
+          "steps"
+        ],
+        "summary": "Find steps for the id",
+        "description": "Returns all steps by the ID",
+        "parameters": [
+          {
+            "name": "stepId",
+            "in": "path",
+            "description": "ID of steps to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Steps"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Steps"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Steps not found",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "steps"
+        ],
+        "summary": "Patch steps for the id",
+        "description": "Edit the steps for the platform",
+        "parameters": [
+          {
+            "name": "stepId",
+            "in": "path",
+            "description": "ID of step to edit",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Steps"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Steps"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Steps not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "steps"
+        ],
+        "summary": "Delete the steps by the id",
+        "description": "Delete the steps for the platform",
+        "parameters": [
+          {
+            "name": "stepId",
+            "in": "path",
+            "description": "ID of steps to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Step not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/steps/topic/{topicId}": {
+      "get": {
+        "tags": [
+          "steps"
+        ],
+        "summary": "Find steps based on a topic ID",
+        "description": "Returns all steps by the ID of the topic",
+        "parameters": [
+          {
+            "name": "topicId",
+            "in": "path",
+            "description": "ID of steps to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Steps"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Steps"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Steps not found",
             "content": {}
           }
         }
@@ -2407,6 +2995,50 @@
         }
       }
     },
+    "/classes/launch-nuke": {
+      "post": {
+        "tags": [
+          "classes"
+        ],
+        "summary": "Reset all classes that have tutors assigned on the platform",
+        "requestBody": {
+          "description": "Requires admin permissions",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Class"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Class"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
     "/rating/{classId}": {
       "get": {
         "tags": [
@@ -2896,6 +3528,188 @@
               "application/xml": {
                 "schema": {
                   "$ref": "#/components/schemas/Tutor"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tutors/overview/{tutorId}": {
+      "get": {
+        "tags": [
+          "tutors"
+        ],
+        "summary": "Get the overview for the tutor dashboard",
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "description": "ID of the tutor on the platform",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "totalStudents": {
+                        "type": "string",
+                        "description": "total students under tutor"
+                      },
+                      "avgLessonRating": {
+                        "type": "string",
+                        "description": "Average rating of the tutor"
+                      },
+                      "avgQuizScore": {
+                        "type": "string",
+                        "description": "Average Quiz Score for the tutor"
+                      },
+                      "classesTaught": {
+                        "type": "string",
+                        "description": "Classes taught by the tutor"
+                      },
+                      "avgTime": {
+                        "type": "string",
+                        "description": "Average time of those classes"
+                      },
+                      "overallPerformance": {
+                        "type": "string",
+                        "description": "Overall performance of the tutor"
+                      },
+                      "tenWeekAvg": {
+                        "type": "array",
+                        "description": "Ten-week average points for different courses",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "course": {
+                              "type": "string",
+                              "description": "Course name"
+                            },
+                            "points": {
+                              "type": "array",
+                              "description": "Points for each week",
+                              "items": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "totalStudents": "5",
+                  "avgLessonRating": "4.7",
+                  "avgQuizScore": "85",
+                  "classesTaught": "10",
+                  "avgTime": "90 minutes",
+                  "overallPerformance": "Excellent",
+                  "tenWeekAvg": [
+                    {
+                      "course": "HTML",
+                      "points": [
+                        50,
+                        10,
+                        19,
+                        33,
+                        50,
+                        10,
+                        19,
+                        33,
+                        60
+                      ]
+                    },
+                    {
+                      "course": "CSS",
+                      "points": [
+                        50,
+                        10,
+                        19,
+                        33,
+                        50,
+                        10,
+                        19,
+                        33,
+                        60
+                      ]
+                    },
+                    {
+                      "course": "Python",
+                      "points": [
+                        50,
+                        10,
+                        19,
+                        33,
+                        50,
+                        10,
+                        19,
+                        33,
+                        60
+                      ]
+                    },
+                    {
+                      "course": "Javascript",
+                      "points": [
+                        50,
+                        10,
+                        19,
+                        33,
+                        50,
+                        10,
+                        19,
+                        33,
+                        60
+                      ]
+                    },
+                    {
+                      "course": "Scratch",
+                      "points": [
+                        50,
+                        10,
+                        19,
+                        33,
+                        50,
+                        10,
+                        19,
+                        33,
+                        60
+                      ]
+                    },
+                    {
+                      "course": "Robotics",
+                      "points": [
+                        50,
+                        10,
+                        19,
+                        33,
+                        50,
+                        10,
+                        19,
+                        33,
+                        60
+                      ]
+                    }
+                  ]
                 }
               }
             }
@@ -3683,6 +4497,130 @@
           }
         }
       }
+    },
+    "/earnings": {
+      "get": {
+        "tags": [
+          "earnings"
+        ],
+        "summary": "Get all the platform earnings=",
+        "description": "Returns an array of earnings on the platform",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Earnings"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Earnings"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid course reference supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Earning not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/earnings/{earningsId}": {
+      "get": {
+        "tags": [
+          "earnings"
+        ],
+        "summary": "Get the specific earning selected",
+        "description": "Returns an object of the earning on the platform",
+        "parameters": [
+          {
+            "name": "earningsId",
+            "in": "path",
+            "description": "ID of the earning earned by tutor",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Earnings"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Earnings"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid course reference supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Earning not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/earnings/user/{tutorId}": {
+      "get": {
+        "tags": [
+          "earnings"
+        ],
+        "summary": "Get the specific user earning selected",
+        "description": "Returns an array of the earning for the tutor",
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "description": "ID of the tutor",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Earnings"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Earnings"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid course reference supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Earning not found",
+            "content": {}
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3714,14 +4652,9 @@
             "example": "password123",
             "minLength": 8
           },
-          "role": {
+          "roles": {
             "type": "string",
-            "description": "The role of the user.",
-            "enum": [
-              "admin",
-              "tutor"
-            ],
-            "default": "tutor"
+            "description": "The role of the user defined from the roles table"
           },
           "lastLogin": {
             "type": "string",
@@ -3738,6 +4671,28 @@
             "type": "string",
             "format": "date-time",
             "description": "The timestamp indicating when the user was last updated."
+          }
+        }
+      },
+      "Roles": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the role being added.",
+            "example": "Finance Role"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the role being added",
+            "example": "Responsible for finance operations"
+          },
+          "permissions": {
+            "type": "object",
+            "description": "The permissions in an array that are assigned to user"
           }
         }
       },
@@ -3779,6 +4734,78 @@
           "classesAssigned": {
             "type": "object",
             "description": "The classes that the tutor has been assigned"
+          },
+          "nextKin": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the next of kin"
+                },
+                "phoneNumber": {
+                  "type": "string",
+                  "description": "The phone number of the next of kin"
+                }
+              }
+            }
+          },
+          "location": {
+            "type": "string",
+            "description": "The area where the tutor comes from"
+          },
+          "nationalIdNumber": {
+            "type": "number",
+            "description": "The national ID number"
+          },
+          "taxPin": {
+            "type": "string",
+            "description": "The national tax ID e.g. KRA Pin"
+          },
+          "tscNo": {
+            "type": "string",
+            "description": "The tsc number that the user has"
+          },
+          "bankAccount": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "accountNumber": {
+                  "type": "string",
+                  "description": "The bank account number"
+                },
+                "accountName": {
+                  "type": "string",
+                  "description": "The bank account name E.g. Equity Bank"
+                },
+                "accountHolderName": {
+                  "type": "string",
+                  "description": "The account holders name E.g. Lemuel"
+                }
+              }
+            }
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The document name"
+                },
+                "size": {
+                  "type": "string",
+                  "description": "The size of the bank account"
+                },
+                "link": {
+                  "type": "string",
+                  "description": "The link after uploading to the storage place"
+                }
+              }
+            }
           },
           "lastLogin": {
             "type": "string",
@@ -4372,6 +5399,38 @@
           }
         }
       },
+      "Steps": {
+        "required": [
+          "topicId",
+          "title",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "topicId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the tutor steps were created.",
+            "default": "2024-04-12T00:00:00Z"
+          }
+        }
+      },
       "Quiz": {
         "required": [
           "topicId",
@@ -4534,6 +5593,37 @@
             "type": "string",
             "description": "The ID of the transaction associated with the payment.",
             "example": "trans_123456789"
+          }
+        }
+      },
+      "Earnings": {
+        "required": [
+          "classId",
+          "tutor",
+          "amount"
+        ],
+        "type": "object",
+        "properties": {
+          "classId": {
+            "type": "string",
+            "description": "The ID of the class making the tutor earn from class code.",
+            "example": "609f69a5b86fd3280456820d"
+          },
+          "tutor": {
+            "type": "string",
+            "description": "The ID of the tutor who is earning.",
+            "example": "609f69a5b86fd3280456820e"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The amount of the earnings.",
+            "example": 600
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp indicating when the earnings were created.",
+            "default": "2024-04-12T00:00:00Z"
           }
         }
       },

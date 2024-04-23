@@ -74,7 +74,12 @@
       "group": "Overviews",
       "pages": [
         "api-reference/endpoint/overviews/admin",
-        "api-reference/endpoint/overviews/tutor"
+        {
+          "group": "Tutor Dashboard ✨",
+          "pages": [
+            "api-reference/endpoint/overviews/tutor-overview"
+          ]
+        }
       ]
     },
     {
@@ -87,7 +92,8 @@
             "api-reference/endpoint/courses/course/post",
             "api-reference/endpoint/courses/course/single",
             "api-reference/endpoint/courses/course/patch",
-            "api-reference/endpoint/courses/course/delete"
+            "api-reference/endpoint/courses/course/delete",
+            "api-reference/endpoint/courses/course/lessons"
           ]
         },
         {
@@ -109,6 +115,17 @@
             "api-reference/endpoint/courses/subtopic/patch",
             "api-reference/endpoint/courses/subtopic/delete",
             "api-reference/endpoint/courses/subtopic/specific"
+          ]
+        },
+        {
+          "group": "Guide Steps",
+          "pages": [
+            "api-reference/endpoint/courses/steps/get",
+            "api-reference/endpoint/courses/steps/post",
+            "api-reference/endpoint/courses/steps/single",
+            "api-reference/endpoint/courses/steps/patch",
+            "api-reference/endpoint/courses/steps/delete",
+            "api-reference/endpoint/courses/steps/specific"
           ]
         },
         {
@@ -158,7 +175,8 @@
             "api-reference/endpoint/schools/class/delete",
             "api-reference/endpoint/schools/class/reset-session",
             "api-reference/endpoint/schools/class/generate-code",
-            "api-reference/endpoint/schools/class/join-class"
+            "api-reference/endpoint/schools/class/join-class",
+            "api-reference/endpoint/schools/class/nuke"
           ]
         },
         {
@@ -213,6 +231,14 @@
           ]
         },
         {
+          "group": "Earnings ✨",
+          "pages": [
+            "api-reference/endpoint/others/earnings/earnings/all",
+            "api-reference/endpoint/others/earnings/payments/get",
+            "api-reference/endpoint/others/earnings/payments/user"
+          ]
+        },
+        {
           "group": "Payments",
           "pages": [
             "api-reference/endpoint/others/payments/payments"
@@ -227,7 +253,19 @@
         {
           "group": "Reports",
           "pages": [
-            "api-reference/endpoint/others/reports/reports"
+            {
+              "group": "Admin",
+              "pages": [
+                "api-reference/endpoint/overviews/admin"
+              ]
+            },
+            {
+              "group": "Tutor",
+              "pages": [
+                "api-reference/endpoint/overviews/tutor-overview",
+                "api-reference/endpoint/overviews/tutor-school"
+              ]
+            }
           ]
         }
       ]
