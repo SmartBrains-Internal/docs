@@ -129,6 +129,16 @@
           ]
         },
         {
+          "group": "Code Env ✨",
+          "pages": [
+            "api-reference/endpoint/courses/env/get",
+            "api-reference/endpoint/courses/env/post",
+            "api-reference/endpoint/courses/env/single",
+            "api-reference/endpoint/courses/env/patch",
+            "api-reference/endpoint/courses/env/delete"
+          ]
+        },
+        {
           "group": "Quizes",
           "pages": [
             "api-reference/endpoint/courses/quiz/get-multi-que",
