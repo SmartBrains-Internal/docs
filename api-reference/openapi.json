@@ -93,7 +93,7 @@
   ],
   "servers": [
     {
-      "url": "api.smartbrainskenya.com"
+      "url": "api.smartbrainskenya.com/v1"
     }
   ],
   "security": [
@@ -3113,11 +3113,21 @@
         ],
         "summary": "Create a class code for students to sign in to a class",
         "requestBody": {
-          "description": "Start a class from the tutor platform",
+          "description": "Start a class from the tutor platform, must be signed in as tutor",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ClassCode"
+                "type": "object",
+                "properties": {
+                  "courseId": {
+                    "type": "string",
+                    "description": "Course Id of the class you want to start"
+                  },
+                  "schoolId": {
+                    "type": "string",
+                    "description": "School Id where you want to start the class"
+                  }
+                }
               }
             }
           },
@@ -3129,7 +3139,21 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClassCode"
+                  "type": "object",
+                  "properties": {
+                    "classId": {
+                      "type": "string",
+                      "description": "Class ID that is being generated for the code"
+                    },
+                    "courseId": {
+                      "type": "string",
+                      "description": "Course Id of the class you want to start"
+                    },
+                    "schoolId": {
+                      "type": "string",
+                      "description": "School Id where you want to start the class"
+                    }
+                  }
                 }
               },
               "application/xml": {
@@ -3373,12 +3397,16 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Tutor"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/Tutor"
+                  "type": "object",
+                  "properties": {
+                    "classIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Class Ids of the classes you want to assign"
+                    }
+                  }
                 }
               }
             }
@@ -4853,7 +4881,7 @@
           },
           "roles": {
             "type": "string",
-            "description": "The role of the user defined from the roles table"
+            "description": "The ID of the roles from the Roles defined"
           },
           "lastLogin": {
             "type": "string",
@@ -4931,8 +4959,11 @@
             "type": "string"
           },
           "classesAssigned": {
-            "type": "object",
-            "description": "The classes that the tutor has been assigned"
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "The classes IDs for those classes you want to assign to the tutor"
+            }
           },
           "nextKin": {
             "type": "array",
@@ -5018,8 +5049,7 @@
         "required": [
           "name",
           "username",
-          "passcode",
-          "email"
+          "passcode"
         ],
         "type": "object",
         "properties": {
@@ -5166,7 +5196,13 @@
       "School": {
         "required": [
           "name",
-          "code"
+          "code",
+          "logo",
+          "location",
+          "region",
+          "town",
+          "type",
+          "isSchoolAvailable"
         ],
         "type": "object",
         "properties": {
@@ -5205,13 +5241,13 @@
       },
       "Class": {
         "required": [
-          "_school",
-          "_course",
+          "schoolId",
+          "course",
           "name"
         ],
         "type": "object",
         "properties": {
-          "_school": {
+          "schoolId": {
             "type": "string"
           },
           "tutor": {
@@ -5220,7 +5256,7 @@
           "assTutor": {
             "type": "string"
           },
-          "_course": {
+          "course": {
             "type": "string"
           },
           "name": {
@@ -5232,70 +5268,8 @@
           "tutors": {
             "type": "string"
           },
-          "schedule": {
-            "type": "object",
-            "properties": {
-              "days": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of days (e.g., [\"Mon\", \"Tue\", \"Wed\"])."
-              },
-              "startTime": {
-                "type": "string",
-                "description": "Start time in 24-hour format (e.g., \"10:00\")."
-              },
-              "endTime": {
-                "type": "string",
-                "description": "End time in 24-hour format (e.g., \"12:00\")."
-              },
-              "repeat": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "weekly",
-                      "monthly",
-                      "untilDate"
-                    ],
-                    "default": "weekly"
-                  },
-                  "untilDate": {
-                    "type": "string",
-                    "format": "date",
-                    "description": "Date until the schedule repeats (used if repeat is 'untilDate')."
-                  },
-                  "numberOfRepeats": {
-                    "type": "integer",
-                    "description": "Number of repeats (used if repeat is 'weekly' or 'monthly')."
-                  }
-                }
-              }
-            },
-            "description": "Class schedule details."
-          },
-          "startRecur": {
-            "type": "string",
-            "format": "date",
-            "description": "Start recurring date for the calendar."
-          },
-          "endRecur": {
-            "type": "string",
-            "format": "date",
-            "description": "End recurring date for the calendar."
-          },
-          "daysOfWeek": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Array of days of the week (0-6) (e.g., [1, 3, 4])."
-          },
-          "calendarStartTime": {
-            "type": "string",
-            "description": "Start time for the calendar in 24-hour format (e.g., \"18:30:00\")."
+          "calendar": {
+            "type": "string"
           }
         }
       },
@@ -5304,6 +5278,7 @@
           "code",
           "tutorId",
           "courseId",
+          "classId",
           "expirationTime"
         ],
         "type": "object",
@@ -5313,6 +5288,10 @@
           },
           "tutorId": {
             "type": "string"
+          },
+          "classId": {
+            "type": "string",
+            "description": "This is the class that is being generated for the code"
           },
           "courseId": {
             "type": "string"
@@ -5743,15 +5722,10 @@
           },
           "attendees": {
             "type": "array",
-            "description": "Array of the attendees",
+            "description": "Array of the attendees' IDs which should come from User, Student and Tutor models. It later will include schoolRep Ids when deployed.",
             "items": {
-              "type": "object",
-              "properties": {
-                "tutors": {
-                  "type": "string",
-                  "description": "Attendees of the event"
-                }
-              }
+              "type": "string",
+              "description": "Attendee ID of the event"
             }
           }
         }
