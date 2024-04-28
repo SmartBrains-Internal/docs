@@ -5727,6 +5727,23 @@
               "type": "string",
               "description": "Attendee ID of the event"
             }
+          },
+          "isRecurring": {
+            "type": "boolean",
+            "default": false,
+            "description": "Flag indicating whether the event is recurring."
+          },
+          "recurrenceDays": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of days on which the event recurs (e.g., [\"Monday\", \"Wednesday\"])."
+          },
+          "endRecurDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Date when the recurrence ends (YYYY-MM-DD)"
           }
         }
       },
